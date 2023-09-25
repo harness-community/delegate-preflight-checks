@@ -45,7 +45,7 @@ check_and_install_cluster() {
 	    newgrp docker << EOF
             sudo systemctl enable --now docker 
 	    curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
-	    k3d cluster create newcluster
+	    k3d cluster create mycluster
 	    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 	    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 	    kubectl get nodes
@@ -78,12 +78,12 @@ check_k8s_connectivity() {
 
 # Function to get available memory from the Kubernetes cluster in MiB (Megabytes)
 get_available_memory_mib() {
-    kubectl describe node | grep -A 5 "Allocatable:" | grep "memory" | awk '{print $2}' | sed 's/Ki//' | awk '{s+=$1} END {printf "%.0f", s/1024}'  # Convert Ki to MiB
+    kubectl describe node | awk '/Allocatable:/,/---/ { if(/memory/) print $2; }' | sed 's/Ki//' | awk '{s+=$1} END {printf "%.0f", s/1024}'  # Convert Ki to MiB
 }
 
 # Function to get available CPU cores from the Kubernetes cluster scaled by 1000 (to avoid floating point comparisons)
 get_available_cpu_scaled() {
-    kubectl describe node | grep -A 1 "Allocatable:" | grep "cpu" | awk '{print $2}' | awk '{
+    kubectl describe node | awk '/Allocatable:/,/---/ { if(/cpu/) print $2; }'| awk '{
         if (index($1,"m")) { 
             print $1+0;  # If in millicores, strip the 'm' character
         } else {
@@ -113,7 +113,7 @@ check_resources() {
     fi
 }
 
-# -------------------------------------
+# --------------------------------------------------
 
 # MAIN PROGRAM
 
