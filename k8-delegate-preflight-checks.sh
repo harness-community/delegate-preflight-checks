@@ -108,7 +108,7 @@ check_resources() {
     if [ "$memory_available_mib" -ge "$memory_required_mib" ] && [ "$cpu_available_scaled" -ge "$cpu_required_scaled" ]; then
         echo "Cluster has enough resources available for delegate."
     else
-        echo "Not enough resources available delegate. Required: At least 2 GB memory and 0.5 CPU. Check your cluster resources."
+        echo "ERROR: Not enough resources available for delegate. Required: At least 2 GB memory and 0.5 CPU. Check your cluster resources."
         exit 1
     fi
 }
