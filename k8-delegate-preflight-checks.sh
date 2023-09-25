@@ -58,7 +58,7 @@ EOF
     fi
 }
 
-# Function to check if a given command exists
+# Check if a given command exists
 check_command_exists() {
     local command="$1"
     
@@ -68,7 +68,7 @@ check_command_exists() {
     fi
 }
 
-# Function to check Kubernetes cluster connectivity
+# Check Kubernetes cluster connectivity
 check_k8s_connectivity() {
     if ! kubectl cluster-info &> /dev/null; then
         echo "Cannot connect to a Kubernetes cluster. One is needed."
@@ -76,12 +76,12 @@ check_k8s_connectivity() {
     fi
 }
 
-# Function to get available memory from the Kubernetes cluster in MiB (Megabytes)
+# Get available memory from the Kubernetes cluster in MiB
 get_available_memory_mib() {
     kubectl describe node | awk '/Allocatable:/,/---/ { if(/memory/) print $2; }' | sed 's/Ki//' | awk '{s+=$1} END {printf "%.0f", s/1024}'  # Convert Ki to MiB
 }
 
-# Function to get available CPU cores from the Kubernetes cluster scaled by 1000 (to avoid floating point comparisons)
+# Get available CPU cores from the Kubernetes cluster (millicores)
 get_available_cpu_scaled() {
     kubectl describe node | awk '/Allocatable:/,/---/ { if(/cpu/) print $2; }'| awk '{
         if (index($1,"m")) { 
@@ -92,7 +92,7 @@ get_available_cpu_scaled() {
     }' | awk '{s+=$1} END {print s}'
 }
 
-# Function to check if the available resources meet the requirements
+# Check if the available resources meet delegate requirements
 check_resources() {
     local memory_required_mib=$((2*1024))  # 2 GB in MiB
     local cpu_required_scaled=500  # 0.5 CPU scaled by 1000
