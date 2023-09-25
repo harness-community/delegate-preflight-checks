@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# FUNCTIONS
+
 # Check for docker installation, otherwise prompt user to install
 check_and_install_docker() {
     # Check if docker is already installed
@@ -110,6 +112,8 @@ check_resources() {
         exit 1
     fi
 }
+
+# -------------------------------------
 
 # MAIN PROGRAM
 
