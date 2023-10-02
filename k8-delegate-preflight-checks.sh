@@ -16,8 +16,7 @@ check_and_install_docker() {
         choice=${choice,,}
 
         if [ "$choice" == "y" ] || [ -z "$choice" ]; then
-            curl -fsSL https://get.docker.com -o get-docker.sh
-            sh get-docker.sh 
+            sh <(curl -fsSL https://get.docker.com -o get-docker.sh)
 	    sudo groupadd docker
 	    sudo usermod -aG docker $USER
             echo "Docker installed successfully."
